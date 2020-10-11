@@ -1,0 +1,38 @@
+{
+  "name": "twitchbuddy-api",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "env-cmd --file ./config/dev.env nodemon src/index.js",
+    "test": "env-cmd --file ./config/test.env jest --watch --runInBand"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@d-fischer/passport-twitch": "^1.0.5",
+    "body-parser": "^1.19.0",
+    "cookie-parser": "^1.4.5",
+    "cookie-session": "^1.4.0",
+    "cors": "^2.8.5",
+    "date-fns": "^2.16.1",
+    "express": "^4.17.1",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^5.10.9",
+    "passport": "^0.4.1",
+    "validator": "^13.1.17"
+  },
+  "devDependencies": {
+    "env-cmd": "^10.1.0",
+    "eslint": "^7.11.0",
+    "eslint-config-standard": "^14.1.1",
+    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^4.2.1",
+    "eslint-plugin-standard": "^4.0.1",
+    "jest": "^26.5.2",
+    "nodemon": "^2.0.4",
+    "supertest": "^5.0.0"
+  }
+}
