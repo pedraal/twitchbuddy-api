@@ -13,6 +13,7 @@ const passportCallback = async (req, res) => {
     user = new User(req.session.passport.user)
     await user.save()
   }
+
   const token = await user.generateAuthToken()
   return { user, token }
 }
