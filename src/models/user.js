@@ -23,6 +23,12 @@ const userSchema = new mongoose.Schema({
         required: true
       }
     }
+  ],
+  lists: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'List'
+    }
   ]
 },
 {

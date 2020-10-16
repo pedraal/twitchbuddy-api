@@ -4,7 +4,11 @@ const UserController = require('../controllers/user')
 const router = new express.Router()
 
 router.get('/me', auth, async (req, res) => {
-  res.send(req.user)
+  try {
+    res.send(req.user)
+  } catch (e) {
+    res.status(500).send()
+  }
 })
 
 router.get('/logout', auth, async (req, res) => {
