@@ -26,13 +26,18 @@ const userSchema = new mongoose.Schema({
   ],
   lists: [
     {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'List'
+      type: String
     }
   ]
 },
 {
   timestamps: true
+})
+
+userSchema.virtual('ownedLists', {
+  ref: 'List',
+  localField: 'lists',
+  foreignField: 'owner'
 })
 
 userSchema.methods.generateAuthToken = async function () {

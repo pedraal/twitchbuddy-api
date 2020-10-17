@@ -35,8 +35,8 @@ const userTwo = {
 const listOne = {
   _id: listOneId,
   name: 'Pedraal1List',
-  clips: [{}, {}],
-  owners: [userOneId]
+  clips: [{ name: 'Clip1' }, { name: 'Clip2' }],
+  owner: userOneId
 }
 
 const populateDatabase = async () => {

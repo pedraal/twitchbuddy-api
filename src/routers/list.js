@@ -1,5 +1,6 @@
 const express = require('express')
 const auth = require('../middleware/auth')
+const ownedList = require('../middleware/ownedList')
 const ListController = require('../controllers/list')
 const router = new express.Router()
 
@@ -22,7 +23,7 @@ router.post('/lists', auth, async (req, res) => {
   }
 })
 
-router.patch('/lists/:id', auth, async (req, res) => {
+router.patch('/lists/:id', [auth, ownedList], async (req, res) => {
   try {
     const list = await ListController.updateList(req)
     res.status(200).send(list)

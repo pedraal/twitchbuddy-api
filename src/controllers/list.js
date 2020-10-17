@@ -3,15 +3,14 @@ const User = require('../models/user')
 
 module.exports = {
   getOwnedLists: async (req) => {
-    const user = await User.findById(req.user._id).populate('lists').exec()
+    const user = await User.findById(req.user._id).populate('ownedLists').exec()
     return user.lists
   },
   createList: async (req) => {
-    const list = new List(req.body)
-    list.owners.push(req.user._id)
-
+    const list = new List({ ...req.body, owner: req.user._id })
     await list.save()
-
+    req.user.lists.push(list._id)
+    await req.user.save()
     return list
   },
   updateList: async (req) => {

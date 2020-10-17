@@ -3,11 +3,12 @@
 const request = require('supertest')
 const app = require('../../src/app')
 const List = require('../../src/models/list')
-const { userOne, populateDatabase, listOneId, userOneId, listOne } = require('../fixtures/db')
+const User = require('../../src/models/user')
+const { userOne, populateDatabase, listOneId, userOneId, userTwo } = require('../fixtures/db')
 
 beforeEach(populateDatabase)
 
-test('Should return owned lists for logged user', async () => {
+test('Should return owned lists for logged owner user', async () => {
   const response = await request(app)
     .get('/lists')
     .set('Authorization', `Bearer ${userOne.tokens[0].token}`)
@@ -26,6 +27,15 @@ test('Should not return lists for guest user', async () => {
   expect(response.body.error).toBeDefined()
 })
 
+test('Should not return lists for not owner user', async () => {
+  const response = await request(app)
+    .get('/lists')
+    .set('Authorization', `Bearer ${userTwo.tokens[0].token}`)
+    .send()
+    .expect(200)
+  expect(response.body.length).toBe(0)
+})
+
 test('Should create list for logged user', async () => {
   const newList = { name: 'List from tests', clips: [{}, {}, {}] }
   const response = await request(app)
@@ -40,7 +50,10 @@ test('Should create list for logged user', async () => {
   expect(lists.length).toBe(2)
 
   const list = await List.findOne({ name: 'List from tests' })
-  expect(list.owners[0]).toStrictEqual(userOneId)
+  expect(list.owner).toStrictEqual(userOneId)
+
+  const user = await User.findById(userOneId)
+  expect(user.lists.length).toBe(2)
 })
 
 test('Should not create list for guest user', async () => {
@@ -70,12 +83,12 @@ test('Should update owned list', async () => {
 
 test('Should not update owned list with invalid fields', async () => {
   const newList = { notAField: true }
-  const response = await request(app)
+  await request(app)
     .patch(`/lists/${listOneId}`)
     .send(newList)
     .set('Authorization', `Bearer ${userOne.tokens[0].token}`)
     .expect(400)
 
   const list = await List.findOne()
-  expect(list).toMatchObject(listOne)
+  expect(list.notAField).not.toBeDefined()
 })

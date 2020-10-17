@@ -9,15 +9,17 @@ const listSchema = new mongoose.Schema({
   clips: {
     type: Array
   },
-  owners: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'User'
-    }
-  ]
+  owner: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User'
+  }
 },
 {
   timestamps: true
+})
+
+listSchema.post('init', async function () {
+
 })
 
 const List = mongoose.model('List', listSchema)
