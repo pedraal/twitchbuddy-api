@@ -12,7 +12,6 @@ const userOne = {
   displayName: 'Pedraal1',
   twitchId: '87396080',
   avatarUrl: 'https://static-cdn.jtvnw.net/jtv_user_pictures/pedraal-profile_image-89d4686eefbc9003-300x300.png',
-  lists: [listOneId],
   tokens: [
     {
       token: jwt.sign({ _id: userOneId }, process.env.JWT_SECRET)
@@ -24,7 +23,6 @@ const userTwo = {
   _id: userTwoId,
   displayName: 'Pedraal2',
   twitchId: '87396081',
-  lists: [],
   avatarUrl: 'https://static-cdn.jtvnw.net/jtv_user_pictures/pedraal-profile_image-89d4686eefbc9003-300x300.png',
   tokens: [
     {
@@ -35,8 +33,9 @@ const userTwo = {
 const listOne = {
   _id: listOneId,
   name: 'Pedraal1List',
-  clips: [{ name: 'Clip1' }, { name: 'Clip2' }],
-  owner: userOneId
+  clips: [{ name: 'Clip 1' }, { name: 'Clip 2' }],
+  owner: userOneId,
+  sharedWith: []
 }
 
 const populateDatabase = async () => {

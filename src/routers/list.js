@@ -14,6 +14,16 @@ router.get('/lists', auth, async (req, res) => {
   }
 })
 
+router.get('/lists/shared', auth, async (req, res) => {
+  try {
+    const lists = await ListController.getSharedLists(req)
+    res.send(lists)
+  } catch (e) {
+    console.log(e)
+    res.status(500).send()
+  }
+})
+
 router.post('/lists', auth, async (req, res) => {
   try {
     const list = await ListController.createList(req)
@@ -28,6 +38,16 @@ router.patch('/lists/:id', [auth, ownedList], async (req, res) => {
     const list = await ListController.updateList(req)
     res.status(200).send(list)
   } catch (error) {
+    res.status(400).send(error.message)
+  }
+})
+
+router.patch('/lists/:id/share', [auth, ownedList], async (req, res) => {
+  try {
+    const list = await ListController.shareList(req)
+    res.status(200).send(list)
+  } catch (error) {
+    console.log(error)
     res.status(400).send(error.message)
   }
 })

@@ -11,15 +11,19 @@ const listSchema = new mongoose.Schema({
   },
   owner: {
     type: mongoose.Schema.Types.ObjectId,
+    required: true,
     ref: 'User'
-  }
+  },
+  sharedWith: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      required: true,
+      ref: 'User'
+    }
+  ]
 },
 {
   timestamps: true
-})
-
-listSchema.post('init', async function () {
-
 })
 
 const List = mongoose.model('List', listSchema)

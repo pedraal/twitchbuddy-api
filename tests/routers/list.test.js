@@ -4,7 +4,7 @@ const request = require('supertest')
 const app = require('../../src/app')
 const List = require('../../src/models/list')
 const User = require('../../src/models/user')
-const { userOne, populateDatabase, listOneId, userOneId, userTwo } = require('../fixtures/db')
+const { userOne, populateDatabase, listOneId, userOneId, userTwo, userTwoId } = require('../fixtures/db')
 
 beforeEach(populateDatabase)
 
@@ -52,8 +52,8 @@ test('Should create list for logged user', async () => {
   const list = await List.findOne({ name: 'List from tests' })
   expect(list.owner).toStrictEqual(userOneId)
 
-  const user = await User.findById(userOneId)
-  expect(user.lists.length).toBe(2)
+  const user = await User.findById(userOneId).populate('ownedLists').exec()
+  expect(user.ownedLists.length).toBe(2)
 })
 
 test('Should not create list for guest user', async () => {
@@ -91,4 +91,38 @@ test('Should not update owned list with invalid fields', async () => {
 
   const list = await List.findOne()
   expect(list.notAField).not.toBeDefined()
+})
+
+test('Should share list with another user', async () => {
+  await request(app)
+    .patch(`/lists/${listOneId}/share`)
+    .send({ username: userTwo.displayName })
+    .set('Authorization', `Bearer ${userOne.tokens[0].token}`)
+    .expect(200)
+
+  const list = await List.findById(listOneId)
+  expect(list.sharedWith.includes(userTwoId)).toBe(true)
+})
+
+test('Should not share list not owned', async () => {
+  await request(app)
+    .patch(`/lists/${listOneId}/share`)
+    .send({ username: userOne.displayName })
+    .set('Authorization', `Bearer ${userTwo.tokens[0].token}`)
+    .expect(403)
+})
+
+test('Should return shared lists for logged user', async () => {
+  await request(app)
+    .patch(`/lists/${listOneId}/share`)
+    .send({ username: userTwo.displayName })
+    .set('Authorization', `Bearer ${userOne.tokens[0].token}`)
+
+  const response = await request(app)
+    .get('/lists/shared')
+    .set('Authorization', `Bearer ${userTwo.tokens[0].token}`)
+    .send()
+    .expect(200)
+
+  expect(response.body.length).toBe(1)
 })

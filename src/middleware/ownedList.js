@@ -1,6 +1,9 @@
+const List = require('../models/list')
+
 const ownedList = async (req, res, next) => {
   try {
-    if (req.user.lists.indexOf(req.params.id) < 0) {
+    const list = await List.findById(req.params.id)
+    if (list.owner.toString() !== req.user.id.toString()) {
       throw new Error()
     }
     next()

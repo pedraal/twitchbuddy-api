@@ -23,11 +23,6 @@ const userSchema = new mongoose.Schema({
         required: true
       }
     }
-  ],
-  lists: [
-    {
-      type: String
-    }
   ]
 },
 {
@@ -36,8 +31,14 @@ const userSchema = new mongoose.Schema({
 
 userSchema.virtual('ownedLists', {
   ref: 'List',
-  localField: 'lists',
+  localField: '_id',
   foreignField: 'owner'
+})
+
+userSchema.virtual('sharedLists', {
+  ref: 'List',
+  localField: '_id',
+  foreignField: 'sharedWith'
 })
 
 userSchema.methods.generateAuthToken = async function () {
