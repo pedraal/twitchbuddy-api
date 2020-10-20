@@ -52,4 +52,13 @@ router.patch('/lists/:id/share', [auth, ownedList], async (req, res) => {
   }
 })
 
+router.delete('/lists/:id', [auth, ownedList], async (req, res) => {
+  try {
+    const list = await ListController.deleteList(req)
+    res.status(200).send(list)
+  } catch (error) {
+    res.status(400).send(error.message)
+  }
+})
+
 module.exports = router

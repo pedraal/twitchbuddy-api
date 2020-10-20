@@ -39,5 +39,10 @@ module.exports = {
 
     list.sharedWith.push(user._id)
     list.save()
+  },
+  deleteList: async (req) => {
+    const list = List.deleteOne({ _id: req.params.id })
+
+    return list
   }
 }

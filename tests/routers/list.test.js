@@ -66,6 +66,20 @@ test('Should not create list for guest user', async () => {
   expect(response.body.error).toBeDefined()
 })
 
+test('Should not create list with existing name', async () => {
+  const newList = { name: 'List from tests', clips: [{}, {}, {}] }
+  await request(app)
+    .post('/lists')
+    .send(newList)
+
+  const response = await request(app)
+    .post('/lists')
+    .send(newList)
+    .expect(401)
+
+  expect(response.body.error).toBeDefined()
+})
+
 test('Should update owned list', async () => {
   const newList = { name: 'Updated list from tests' }
   const response = await request(app)
@@ -125,4 +139,15 @@ test('Should return shared lists for logged user', async () => {
     .expect(200)
 
   expect(response.body.length).toBe(1)
+})
+
+test('Should delete an owned list', async () => {
+  await request(app)
+    .delete(`/lists/${listOneId}`)
+    .set('Authorization', `Bearer ${userOne.tokens[0].token}`)
+    .send()
+    .expect(200)
+
+  const lists = await List.find()
+  expect(lists.length).toBe(0)
 })
