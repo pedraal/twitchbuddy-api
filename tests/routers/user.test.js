@@ -3,7 +3,7 @@
 const request = require('supertest')
 const app = require('../../src/app')
 const User = require('../../src/models/user')
-const { userOne, populateDatabase } = require('../fixtures/db')
+const { userOne, userOneId, populateDatabase } = require('../fixtures/db')
 
 beforeEach(populateDatabase)
 
@@ -55,4 +55,26 @@ test('Should logout user from all devices', async () => {
 
   user = await User.findOne({ twitchId: userOne.twitchId })
   expect(user.tokens.length).toBe(0)
+})
+
+test("Should return user's favorites", async () => {
+  const res = await request(app)
+    .get('/me/favorites')
+    .set('Authorization', `Bearer ${userOne.tokens[0].token}`)
+    .send()
+    .expect(200)
+
+  expect(res.body.length).toBe(1)
+})
+
+test("Should update user's favorites", async () => {
+  await request(app)
+    .patch('/me/favorites')
+    .set('Authorization', `Bearer ${userOne.tokens[0].token}`)
+    .send([{}, {}])
+    .expect(200)
+
+  const user = await User.findById(userOneId)
+
+  expect(user.favorites.length).toBe(2)
 })

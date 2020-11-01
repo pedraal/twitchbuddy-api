@@ -10,5 +10,11 @@ module.exports = {
   logoutall: async (req) => {
     req.user.tokens = []
     await req.user.save()
+  },
+  updateFavorites: async (req) => {
+    req.user.favorites = req.body
+    await req.user.save()
+
+    return req.user.favorites
   }
 }

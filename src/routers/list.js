@@ -9,7 +9,6 @@ router.get('/lists', auth, async (req, res) => {
     const lists = await ListController.getOwnedLists(req)
     res.send(lists)
   } catch (e) {
-    console.log(e)
     res.status(500).send()
   }
 })
@@ -19,7 +18,6 @@ router.get('/lists/shared', auth, async (req, res) => {
     const lists = await ListController.getSharedLists(req)
     res.send(lists)
   } catch (e) {
-    console.log(e)
     res.status(500).send()
   }
 })
@@ -47,7 +45,24 @@ router.patch('/lists/:id/share', [auth, ownedList], async (req, res) => {
     const list = await ListController.shareList(req)
     res.status(200).send(list)
   } catch (error) {
-    console.log(error)
+    res.status(400).send(error.message)
+  }
+})
+
+router.patch('/lists/:id/join', [auth], async (req, res) => {
+  try {
+    const list = await ListController.joinList(req)
+    res.status(200).send(list)
+  } catch (error) {
+    res.status(400).send(error.message)
+  }
+})
+
+router.patch('/lists/:id/leave', [auth], async (req, res) => {
+  try {
+    const list = await ListController.leaveList(req)
+    res.status(200).send(list)
+  } catch (error) {
     res.status(400).send(error.message)
   }
 })

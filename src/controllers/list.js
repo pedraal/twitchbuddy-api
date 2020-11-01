@@ -40,6 +40,28 @@ module.exports = {
     list.sharedWith.push(user._id)
     list.save()
   },
+  joinList: async (req) => {
+    const list = await List.findById(req.params.id)
+
+    if (list.sharedWith.includes(req.user._id)) {
+      throw new Error('List already joint')
+    }
+    if (list.owner.equals(req.user._id)) {
+      throw new Error('List owned')
+    }
+
+    list.sharedWith.push(req.user._id)
+    list.save()
+
+    return list
+  },
+  leaveList: async (req) => {
+    const list = await List.findById(req.params.id)
+    list.sharedWith = list.sharedWith.filter(id => !id.equals(req.user._id))
+    list.save()
+
+    return list
+  },
   deleteList: async (req) => {
     const list = List.deleteOne({ _id: req.params.id })
 

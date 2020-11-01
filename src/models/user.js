@@ -16,6 +16,10 @@ const userSchema = new mongoose.Schema({
     required: true,
     trim: true
   },
+  favorites: {
+    type: Array,
+    default: () => []
+  },
   tokens: [
     {
       token: {

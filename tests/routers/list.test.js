@@ -151,3 +151,33 @@ test('Should delete an owned list', async () => {
   const lists = await List.find()
   expect(lists.length).toBe(0)
 })
+
+test('Should join a list', async () => {
+  await request(app)
+    .patch(`/lists/${listOneId}/join`)
+    .set('Authorization', `Bearer ${userTwo.tokens[0].token}`)
+    .send()
+    .expect(200)
+
+  const list = await List.findById(listOneId)
+  expect(list.sharedWith.includes(userTwoId)).toBe(true)
+})
+
+test('Should not join owned list', async () => {
+  await request(app)
+    .patch(`/lists/${listOneId}/join`)
+    .set('Authorization', `Bearer ${userOne.tokens[0].token}`)
+    .send()
+    .expect(400)
+})
+
+test('Should leave a list', async () => {
+  await request(app)
+    .patch(`/lists/${listOneId}/leave`)
+    .set('Authorization', `Bearer ${userTwo.tokens[0].token}`)
+    .send()
+    .expect(200)
+
+  const list = await List.findById(listOneId)
+  expect(list.sharedWith.includes(userTwoId)).toBe(false)
+})
