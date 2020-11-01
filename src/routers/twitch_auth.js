@@ -18,9 +18,7 @@ router.get('/auth/twitch/callback', passport.authenticate('twitch', { failureRed
       secure: isCookieSecure,
       domain: process.env.TWITCHBUDDY_DOMAIN || 'localhost'
     }
-    // if (process.env.NODE_ENV === 'production') {
-    cookieOptions.domain = 'twitchbuddy.app'
-    // }
+
     res
       .status(200)
       .cookie('tbtoken', token, cookieOptions)
