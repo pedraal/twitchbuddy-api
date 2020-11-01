@@ -10,12 +10,20 @@ router.get('/auth/twitch', passport.authenticate('twitch'))
 router.get('/auth/twitch/callback', passport.authenticate('twitch', { failureRedirect: '/' }), async (req, res) => {
   try {
     const { token } = await TwitchAuthController.passportCallback(req, res)
+
+    const isCookieSecure = process.env.NODE_ENV === 'production'
+    const cookieOptions = {
+      expires: addMonths(new Date(), 1),
+      httpOnly: isCookieSecure,
+      secure: isCookieSecure,
+      domain: process.env.TWITCHBUDDY_DOMAIN || 'localhost'
+    }
+    // if (process.env.NODE_ENV === 'production') {
+    cookieOptions.domain = 'twitchbuddy.app'
+    // }
     res
       .status(200)
-      .cookie('tbtoken', token, {
-        expires: addMonths(new Date(), 1),
-        httpOnly: false
-      })
+      .cookie('tbtoken', token, cookieOptions)
       .redirect(process.env.TWITCHBUDDY_URL)
   } catch (error) {
     res.status(400).send(error)
