@@ -11,7 +11,6 @@ router.get('/auth/twitch/callback', passport.authenticate('twitch', { failureRed
   try {
     const { token } = await TwitchAuthController.passportCallback(req, res)
 
-    // const isCookieSecure = process.env.NODE_ENV === 'production'
     const cookieOptions = {
       expires: addMonths(new Date(), 1),
       httpOnly: false,
