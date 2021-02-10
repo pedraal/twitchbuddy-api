@@ -5,6 +5,7 @@ const app = require('../../src/app')
 const User = require('../../src/models/user')
 const TwitchAuthController = require('../../src/controllers/twitch_auth')
 const { userOne, populateDatabase } = require('../fixtures/db')
+const jwt = require('jsonwebtoken')
 
 beforeEach(populateDatabase)
 
@@ -44,7 +45,7 @@ test('Should not create existing user', async () => {
 
 test('Should log existing user', async () => {
   request(app)
-  await TwitchAuthController.passportCallback({
+  const { user, token } = await TwitchAuthController.passportCallback({
     session: {
       passport: {
         user: {
@@ -55,6 +56,7 @@ test('Should log existing user', async () => {
       }
     }
   }, null)
-  const user = await User.findOne({ twitchId: userOne.twitchId })
-  expect(user.tokens.length).toBe(2)
+  const decoded = jwt.verify(token, process.env.JWT_SECRET)
+  expect(decoded._id).toBe(userOne._id.toString())
+  expect(user.displayName).toBe(userOne.displayName)
 })

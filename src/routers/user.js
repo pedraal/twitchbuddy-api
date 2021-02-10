@@ -11,24 +11,6 @@ router.get('/me', auth, async (req, res) => {
   }
 })
 
-router.get('/logout', auth, async (req, res) => {
-  try {
-    UserController.logout(req)
-    res.send()
-  } catch (error) {
-    res.status(500).send()
-  }
-})
-
-router.get('/logoutall', auth, async (req, res) => {
-  try {
-    UserController.logoutall(req)
-    res.send()
-  } catch (error) {
-    res.status(500).send()
-  }
-})
-
 router.get('/me/favorites', auth, async (req, res) => {
   try {
     res.send(req.user.favorites)

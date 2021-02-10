@@ -11,7 +11,7 @@ beforeEach(populateDatabase)
 test('Should return owned lists for logged owner user', async () => {
   const response = await request(app)
     .get('/lists')
-    .set('Authorization', `Bearer ${userOne.tokens[0].token}`)
+    .set('Authorization', `Bearer ${userOne.token}`)
     .send()
     .expect(200)
 
@@ -30,7 +30,7 @@ test('Should not return lists for guest user', async () => {
 test('Should not return lists for not owner user', async () => {
   const response = await request(app)
     .get('/lists')
-    .set('Authorization', `Bearer ${userTwo.tokens[0].token}`)
+    .set('Authorization', `Bearer ${userTwo.token}`)
     .send()
     .expect(200)
   expect(response.body.length).toBe(0)
@@ -41,7 +41,7 @@ test('Should create list for logged user', async () => {
   const response = await request(app)
     .post('/lists')
     .send(newList)
-    .set('Authorization', `Bearer ${userOne.tokens[0].token}`)
+    .set('Authorization', `Bearer ${userOne.token}`)
     .expect(201)
 
   expect(response.body).toMatchObject(newList)
@@ -85,7 +85,7 @@ test('Should update owned list', async () => {
   const response = await request(app)
     .patch(`/lists/${listOneId}`)
     .send(newList)
-    .set('Authorization', `Bearer ${userOne.tokens[0].token}`)
+    .set('Authorization', `Bearer ${userOne.token}`)
     .expect(200)
 
   expect(response.body.name).toStrictEqual('Updated list from tests')
@@ -100,7 +100,7 @@ test('Should not update owned list with invalid fields', async () => {
   await request(app)
     .patch(`/lists/${listOneId}`)
     .send(newList)
-    .set('Authorization', `Bearer ${userOne.tokens[0].token}`)
+    .set('Authorization', `Bearer ${userOne.token}`)
     .expect(400)
 
   const list = await List.findOne()
@@ -111,7 +111,7 @@ test('Should share list with another user', async () => {
   await request(app)
     .patch(`/lists/${listOneId}/share`)
     .send({ username: userTwo.displayName })
-    .set('Authorization', `Bearer ${userOne.tokens[0].token}`)
+    .set('Authorization', `Bearer ${userOne.token}`)
     .expect(200)
 
   const list = await List.findById(listOneId)
@@ -122,7 +122,7 @@ test('Should not share list not owned', async () => {
   await request(app)
     .patch(`/lists/${listOneId}/share`)
     .send({ username: userOne.displayName })
-    .set('Authorization', `Bearer ${userTwo.tokens[0].token}`)
+    .set('Authorization', `Bearer ${userTwo.token}`)
     .expect(403)
 })
 
@@ -130,11 +130,11 @@ test('Should return shared lists for logged user', async () => {
   await request(app)
     .patch(`/lists/${listOneId}/share`)
     .send({ username: userTwo.displayName })
-    .set('Authorization', `Bearer ${userOne.tokens[0].token}`)
+    .set('Authorization', `Bearer ${userOne.token}`)
 
   const response = await request(app)
     .get('/lists/shared')
-    .set('Authorization', `Bearer ${userTwo.tokens[0].token}`)
+    .set('Authorization', `Bearer ${userTwo.token}`)
     .send()
     .expect(200)
 
@@ -144,7 +144,7 @@ test('Should return shared lists for logged user', async () => {
 test('Should delete an owned list', async () => {
   await request(app)
     .delete(`/lists/${listOneId}`)
-    .set('Authorization', `Bearer ${userOne.tokens[0].token}`)
+    .set('Authorization', `Bearer ${userOne.token}`)
     .send()
     .expect(200)
 
@@ -155,7 +155,7 @@ test('Should delete an owned list', async () => {
 test('Should join a list', async () => {
   await request(app)
     .patch(`/lists/${listOneId}/join`)
-    .set('Authorization', `Bearer ${userTwo.tokens[0].token}`)
+    .set('Authorization', `Bearer ${userTwo.token}`)
     .send()
     .expect(200)
 
@@ -166,7 +166,7 @@ test('Should join a list', async () => {
 test('Should not join owned list', async () => {
   await request(app)
     .patch(`/lists/${listOneId}/join`)
-    .set('Authorization', `Bearer ${userOne.tokens[0].token}`)
+    .set('Authorization', `Bearer ${userOne.token}`)
     .send()
     .expect(400)
 })
@@ -174,7 +174,7 @@ test('Should not join owned list', async () => {
 test('Should leave a list', async () => {
   await request(app)
     .patch(`/lists/${listOneId}/leave`)
-    .set('Authorization', `Bearer ${userTwo.tokens[0].token}`)
+    .set('Authorization', `Bearer ${userTwo.token}`)
     .send()
     .expect(200)
 

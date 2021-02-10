@@ -13,11 +13,7 @@ const userOne = {
   twitchId: '87396080',
   avatarUrl: 'https://static-cdn.jtvnw.net/jtv_user_pictures/pedraal-profile_image-89d4686eefbc9003-300x300.png',
   favorites: [{}],
-  tokens: [
-    {
-      token: jwt.sign({ _id: userOneId }, process.env.JWT_SECRET)
-    }
-  ]
+  token: jwt.sign({ _id: userOneId }, process.env.JWT_SECRET)
 }
 
 const userTwo = {
@@ -26,11 +22,7 @@ const userTwo = {
   twitchId: '87396081',
   avatarUrl: 'https://static-cdn.jtvnw.net/jtv_user_pictures/pedraal-profile_image-89d4686eefbc9003-300x300.png',
   favorites: [],
-  tokens: [
-    {
-      token: jwt.sign({ _id: userTwoId }, process.env.JWT_SECRET)
-    }
-  ]
+  token: jwt.sign({ _id: userTwoId }, process.env.JWT_SECRET)
 }
 const listOne = {
   _id: listOneId,
