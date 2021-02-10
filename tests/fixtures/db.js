@@ -2,6 +2,7 @@ const jwt = require('jsonwebtoken')
 const mongoose = require('mongoose')
 const User = require('../../src/models/user')
 const List = require('../../src/models/list')
+const ApiToken = require('../../src/models/api_token')
 
 const userOneId = new mongoose.Types.ObjectId()
 const userTwoId = new mongoose.Types.ObjectId()
@@ -35,6 +36,7 @@ const listOne = {
 const populateDatabase = async () => {
   await User.deleteMany()
   await List.deleteMany()
+  await ApiToken.deleteMany()
   await new User(userOne).save()
   await new User(userTwo).save()
   await new List(listOne).save()
