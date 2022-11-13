@@ -1,0 +1,21 @@
+version: "3.8"
+
+services:
+  twitchbuddy-api:
+    build: ./
+    restart: always
+    env_file: docker-compose.env
+    expose:
+      - 5000
+    networks:
+      - proxy
+    labels:
+      - traefik.enable=true
+      - traefik.http.services.twitchbuddy-api-service.loadbalancer.server.port=5000
+      - traefik.http.routers.twitchbuddy-api.rule=Host(`${TWITCHBUDDY_API_DOMAIN}`)
+      - traefik.http.routers.twitchbuddy-api.entrypoints=web-secured
+      - traefik.http.routers.twitchbuddy-api.tls.certresolver=le-resolver
+
+networks:
+  proxy:
+    external: true

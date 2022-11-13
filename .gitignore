@@ -3,3 +3,6 @@ config/*
 yarn-error.log
 ecosystem.config.js
 .DS_Store
+
+.env
+docker-compose.env
