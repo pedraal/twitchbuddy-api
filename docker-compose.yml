@@ -11,7 +11,11 @@ services:
       - proxy
     labels:
       - traefik.enable=true
-      - traefik.http.services.twitchbuddy-api-service.loadbalancer.server.port=5000
+      - traefik.http.services.twitchbuddy-api.loadbalancer.server.port=5000
+
+      - traefik.http.routers.twitchbuddy-api-secured.service=twitchbuddy-api@docker
+      - traefik.http.routers.twitchbuddy-api-secured.entrypoints=web-secured
+      - traefik.http.routers.twitchbuddy-api-secured.tls=true
       - traefik.http.routers.twitchbuddy-api.rule=Host(`${TWITCHBUDDY_API_DOMAIN}`)
       - traefik.http.routers.twitchbuddy-api.entrypoints=web-secured
       - traefik.http.routers.twitchbuddy-api.tls.certresolver=le-resolver
